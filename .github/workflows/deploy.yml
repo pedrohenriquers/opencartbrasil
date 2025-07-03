@@ -10,8 +10,8 @@ jobs:
     - name: FTP Deploy (incremental)
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
-        ftp-server: ${{ secrets.HOST }} 
-        ftp-username: ${{ secrets.USER }}
-        ftp-password: ${{ secrets.PASS }}
-        localDir: "."
-        remoteDir: "public_html/demonstracao"
+        server: ${{ secrets.HOST }} 
+        username: ${{ secrets.USER }}
+        password: ${{ secrets.PASS }}
+        local-dir: "."
+        server-dir: "public_html/demonstracao"
