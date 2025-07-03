@@ -7,8 +7,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: FTP Deploy Locaweb
-      uses: locaweb/ftp-deploy@1.0.0
+    - name: FTP Deploy (incremental)
+      uses: SamKirkland/FTP-Deploy-Action@v4
       with:
         host: ${{ secrets.HOST }} 
         user: ${{ secrets.USER }}
