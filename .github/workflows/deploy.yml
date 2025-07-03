@@ -13,5 +13,5 @@ jobs:
         server: ${{ secrets.HOST }} 
         username: ${{ secrets.USER }}
         password: ${{ secrets.PASS }}
-        local-dir: "."
+        local-dir: "./"
         server-dir: "public_html/demonstracao"
