@@ -11,7 +11,7 @@ $_['language_directory']   = 'en-gb';
 $_['language_autoload']    = array('en-gb');
 
 // Date
-$_['date_timezone']        = 'UTC';
+$_['date_timezone']        = 'America/Sao_Paulo';
 
 // Database
 $_['db_engine']            = 'mysqli'; // mysqli, pdo or pgsql
