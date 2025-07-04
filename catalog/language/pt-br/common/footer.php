@@ -15,3 +15,4 @@ $_['text_order']        = 'Histórico de pedidos';
 $_['text_wishlist']     = 'Lista de desejos';
 $_['text_newsletter']   = 'Informativo';
 #$_['text_powered']      = 'Desenvolvido com tecnologia <a href="https://www.opencart.com">OpenCart</a><br /> %s &copy; %s';
+$_['text_powered']      = 'Desenvolvido com tecnologia:<br /> %s &copy; %s';
