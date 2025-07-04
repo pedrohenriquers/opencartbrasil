@@ -3,6 +3,8 @@ class ControllerStartupSass extends Controller {
 	public function index() {
 		$file = DIR_APPLICATION . 'view/stylesheet/bootstrap.css';
 
+		// COMENTE TODO ESTE BLOCO PARA DESABILITAR A COMPILAÇÃO DO BOOTSTRAP.SCSS
+		/*
 		if (!is_file($file) || !$this->config->get('developer_sass')) {
 			$scss = new \Leafo\ScssPhp\Compiler();
 			$scss->setImportPaths(DIR_APPLICATION . 'view/stylesheet/sass/');
@@ -21,5 +23,6 @@ class ControllerStartupSass extends Controller {
 
 			fclose($handle);
 		}
+		*/
 	}
 }
