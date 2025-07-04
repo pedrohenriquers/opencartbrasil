@@ -17,7 +17,7 @@ Options -Indexes
 RewriteEngine On
 
 ## Se as pastas e arquivos do OpenCart não estiverem no diretório raiz, adicione na linha abaixo o nome do diretório que as pastas e arquivos estão, como: /loja/
-RewriteBase /
+RewriteBase /demonstracao
 RewriteRule ^sitemap.xml$ index.php?route=extension/feed/google_sitemap [L]
 RewriteRule ^googlebase.xml$ index.php?route=extension/feed/google_base [L]
 RewriteRule ^system/storage/(.*) index.php?route=error/not_found [L]
