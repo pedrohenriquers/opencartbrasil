@@ -116,7 +116,7 @@ class ControllerExtensionDashboardSale extends Controller {
 			$data['total'] = round($sale_total);
 		}*/
 		
-		$data['total'] = $sale_total;
+		$data['total'] = number_format($sale_total, 2, ',', '.');;
 
 		$data['sale'] = $this->url->link('sale/order', 'user_token=' . $this->session->data['user_token'], true);
 
