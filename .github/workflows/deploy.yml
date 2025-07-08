@@ -15,4 +15,4 @@ jobs:
         username: ${{ secrets.USER }}
         password: ${{ secrets.PASS }}
         local-dir: "./"
-        server-dir: "public_html/demonstracao/"
+        server-dir: "site-exemplo/"
