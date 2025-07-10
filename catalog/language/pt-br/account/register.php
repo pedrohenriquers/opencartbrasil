@@ -13,6 +13,7 @@ $_['text_agree']           = 'Eu li e concordo com o contrato de <a href="%s" cl
 
 // Entry
 $_['entry_customer_group'] = 'Comprar como';
+$_['entry_firstname']      = 'CPF/CNPJ';
 $_['entry_firstname']      = 'Nome';
 $_['entry_lastname']       = 'Sobrenome';
 $_['entry_email']          = 'E-mail';
@@ -23,6 +24,7 @@ $_['entry_confirm']        = 'Repetir a senha';
 
 // Error
 $_['error_exists']         = 'Atenção: Este e-mail já está cadastrado.';
+$_['error_cpfcnpj']      = 'Informe seu CPF/CNPJ corretamente.';
 $_['error_firstname']      = 'O nome deve ter entre 1 e 32 caracteres.';
 $_['error_lastname']       = 'O sobrenome deve ter entre 1 e 32 caracteres.';
 $_['error_email']          = 'O e-mail não é válido.';

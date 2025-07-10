@@ -53,7 +53,6 @@ $_['entry_fault_detail'] = 'Detalhes';
 // Error
 $_['text_error']         = 'Devolução não localizada.';
 $_['error_order_id']     = 'O número do pedido é obrigatório.';
-$_['error_cpfcnpj']      = 'Informe seu CPF/CNPJ corretamente.';
 $_['error_firstname']    = 'O nome deve ter entre 1 e 32 caracteres.';
 $_['error_lastname']     = 'O sobrenome deve ter entre 1 e 32 caracteres.';
 $_['error_email']        = 'O e-mail não é válido.';
