@@ -16,7 +16,6 @@ $_['entry_telephone']    = 'Telefone';
 
 // Error
 $_['error_exists']       = 'Atenção: Este e-mail já está cadastrado.';
-$_['error_cpfcnpj']      = 'Informe seu CPF ou CNPJ corretamente.';
 $_['error_firstname']    = 'O nome deve ter entre 1 e 32 caracteres.';
 $_['error_lastname']     = 'O sobrenome deve entre 1 e 32 caracteres.';
 $_['error_email']        = 'O e-mail não é válido.';

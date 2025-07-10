@@ -23,15 +23,6 @@
         <fieldset>
           <legend>{{ text_order }}</legend>
           <div class="form-group required">
-            <label class="col-sm-2 control-label" for="input-cpf-cnpj">{{ entry_cpfcnpj }}</label>
-            <div class="col-sm-10">
-              <input type="text" name="cpfcnpj" value="{{ cpfcnpj }}" placeholder="{{ entry_cpfcnpj }}" id="input-cpfcnpj" class="form-control" />
-              {% if error_cpfcnpj %}
-              <div class="text-danger">{{ error_cpfcnpj }}</div>
-              {% endif %}
-            </div>
-          </div>
-          <div class="form-group required">
             <label class="col-sm-2 control-label" for="input-firstname">{{ entry_firstname }}</label>
             <div class="col-sm-10">
               <input type="text" name="firstname" value="{{ firstname }}" placeholder="{{ entry_firstname }}" id="input-firstname" class="form-control" />
