@@ -55,6 +55,12 @@ class ControllerAccountRegister extends Controller {
 			$data['error_warning'] = '';
 		}
 
+		if (isset($this->error['cpfcnpj'])) {
+			$data['error_cpfcnpj'] = $this->error['cpfcnpj'];
+		} else {
+			$data['error_cpfcnpj'] = '';
+		}
+
 		if (isset($this->error['firstname'])) {
 			$data['error_firstname'] = $this->error['firstname'];
 		} else {
@@ -117,6 +123,12 @@ class ControllerAccountRegister extends Controller {
 			$data['customer_group_id'] = $this->request->post['customer_group_id'];
 		} else {
 			$data['customer_group_id'] = $this->config->get('config_customer_group_id');
+		}
+
+		if (isset($this->request->post['cpfcnpj'])) {
+			$data['cpfcnpj'] = $this->request->post['cpfcnpj'];
+		} else {
+			$data['cpfcnpj'] = '';
 		}
 
 		if (isset($this->request->post['firstname'])) {
@@ -219,6 +231,7 @@ class ControllerAccountRegister extends Controller {
 
 	private function validate() {
 		$fields = array(
+			'cpfcnpj',
 			'firstname',
 			'lastname',
 			'email',
@@ -233,6 +246,10 @@ class ControllerAccountRegister extends Controller {
 			if (!isset($this->request->post[$field])) {
 				$this->request->post[$field] = '';
 			}
+		}
+
+		if ((utf8_strlen(trim($this->request->post['cpfcnpj'])) < 1) || (utf8_strlen(trim($this->request->post['cpfcnpj'])) > 32)) {
+			$this->error['cpfcnpj'] = $this->language->get('error_cpfcnpj');
 		}
 
 		if ((utf8_strlen(trim($this->request->post['firstname'])) < 1) || (utf8_strlen(trim($this->request->post['firstname'])) > 32)) {
