@@ -16,4 +16,5 @@ jobs:
         password: ${{ secrets.PASS }}
         local-dir: "./"
         server-dir: "site-exemplo/"
-        skip-deleted-files: true
+        exclude: |
+          install/**
