@@ -13,7 +13,7 @@ $_['text_agree']           = 'Eu li e concordo com o contrato de <a href="%s" cl
 
 // Entry
 $_['entry_customer_group'] = 'Comprar como';
-$_['entry_firstname']      = 'CPF/CNPJ';
+$_['entry_cpfcnpj']      = 'CPF/CNPJ';
 $_['entry_firstname']      = 'Nome';
 $_['entry_lastname']       = 'Sobrenome';
 $_['entry_email']          = 'E-mail';
