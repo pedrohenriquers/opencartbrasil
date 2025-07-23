@@ -15,4 +15,6 @@ jobs:
         username: ${{ secrets.USER }}
         password: ${{ secrets.PASS }}
         local-dir: "./"
-        server-dir: "tijucon/"
+        server-dir: "site-exemplo/"
+        exclude: |
+          install/**
