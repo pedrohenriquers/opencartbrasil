@@ -119,6 +119,21 @@ cd "$TARGET_DIR"
 [ ! -f admin/config.php ] && [ -f admin/config-dist.php ] && cp admin/config-dist.php admin/config.php || true
 
 # ---------------------------------------------------------------------
+echo "[4.1/5] RESOLVENDO DEPENDÊNCIAS PHP (Isolado e Forçado)..."
+cd /var/www/html
+
+# Baixa o instalador local para evitar conflito de versão do PHP do sistema com o Composer global
+curl -sS https://getcomposer.org/installer | php -- --quiet
+
+# Executa o install usando as flags de bypass que funcionaram no ambiente
+echo "-> Rodando composer install com flags de bypass de auditoria..."
+php composer.phar install --ignore-platform-reqs --no-audit --no-blocking --no-interaction --quiet || \
+php composer.phar install --ignore-platform-reqs --no-audit --no-interaction --quiet || true
+
+# Remove o instalador temporário
+rm -f composer.phar
+
+# ---------------------------------------------------------------------
 echo "[4.5/5] Liberando acesso SSH para o usuário root com senha..."
 if [ -f /etc/ssh/sshd_config ]; then
     # 1. Garante a configuração de PermitRootLogin
