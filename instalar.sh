@@ -80,6 +80,9 @@ echo "[4/5] Validando arquivos do OpenCart via GIT Autenticado..."
 TARGET_DIR="/var/www/html"
 mkdir -p "$TARGET_DIR"
 
+# Adiciona preventivamente a pasta à lista de diretórios seguros do Git para evitar o erro "dubious ownership"
+git config --global --add safe.directory "$TARGET_DIR" || true
+
 # Se a pasta já tiver um repositório git inicializado, atualiza o código
 if [ -d "$TARGET_DIR/.git" ]; then
     echo "-> Repositório já existente. Atualizando URL remota com credenciais e buscando atualizações..."
@@ -125,10 +128,11 @@ cd /var/www/html
 # Baixa o instalador local para evitar conflito de versão do PHP do sistema com o Composer global
 curl -sS https://getcomposer.org/installer | php -- --quiet
 
-# Executa o install usando as flags de bypass que funcionaram no ambiente
-echo "-> Rodando composer install com flags de bypass de auditoria..."
-php composer.phar install --ignore-platform-reqs --no-audit --no-blocking --no-interaction --quiet || \
-php composer.phar install --ignore-platform-reqs --no-audit --no-interaction --quiet || true
+# Executa o install liberando explicitamente os plugins para rodarem como superusuário,
+# aplicando as flags corretas de bypass de auditoria, bloqueio e interatividade.
+echo "-> Rodando composer install com flags de bypass e permissão superuser..."
+COMPOSER_ALLOW_SUPERUSER=1 php composer.phar install --ignore-platform-reqs --no-audit --no-blocking --no-interaction --quiet || \
+COMPOSER_ALLOW_SUPERUSER=1 php composer.phar install --ignore-platform-reqs --no-audit --no-interaction --quiet || true
 
 # Remove o instalador temporário
 rm -f composer.phar
