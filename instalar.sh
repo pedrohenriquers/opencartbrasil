@@ -31,7 +31,7 @@ echo "[1/5] Validando atualizações e dependências do sistema..."
 if ! command -v curl &> /dev/null || ! command -v unzip &> /dev/null || ! command -v git &> /dev/null || ! command -v sshd &> /dev/null; then
     echo "-> Instalando dependências básicas (Git, SSH, etc)..."
     apt update && apt upgrade -y
-    apt install software-properties-common curl unzip git openssh-server -y
+    apt install software-properties-common curl unzip git openssh-server python3 python3-pip python3-venv -y
 else
     echo "-> Dependências básicas já estão presentes. Pulando."
 fi
