@@ -88,7 +88,7 @@ if [ -d "$TARGET_DIR/.git" ]; then
     echo "-> Repositório já existente. Atualizando URL remota com credenciais e buscando atualizações..."
     cd "$TARGET_DIR"
     
-    # Atualiza a URL do remote caso o token tenha mudado
+    # Atualiza a URL do remote com o token para garantir permissão de push/pull futuro
     git remote set-url origin "$GIT_REPO"
     
     # Configura o git temporariamente para evitar travar se houver arquivos alterados localmente
@@ -110,6 +110,10 @@ else
     
     # Clona o repositório diretamente na pasta do Apache usando a URL com o Token informado
     git clone "$GIT_REPO" "$TARGET_DIR"
+    
+    # Entra na pasta e força a URL remota a persistir com as credenciais salvas para push manuais posteriores
+    cd "$TARGET_DIR"
+    git remote set-url origin "$GIT_REPO"
     
     # Restaura os configs se eles existiam antes do clone limpo
     [ -f /tmp/config_backup.php ] && mv /tmp/config_backup.php "$TARGET_DIR/config.php" || true
