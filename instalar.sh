@@ -132,11 +132,16 @@ cd /var/www/html
 # Baixa o instalador local para evitar conflito de versão do PHP do sistema com o Composer global
 curl -sS https://getcomposer.org/installer | php -- --quiet
 
+# Libera explicitamente os plugins no Composer para evitar o bloqueio de segurança "allow-plugins"
+echo "-> Configurando permissões de plugins do Composer..."
+php composer.phar config allow-plugins.composer/installers true || true
+php composer.phar config allow-plugins true --global --quiet || true
+
 # Executa o install liberando explicitamente os plugins para rodarem como superusuário,
 # aplicando as flags corretas de bypass de auditoria, bloqueio e interatividade.
 echo "-> Rodando composer install com flags de bypass e permissão superuser..."
-COMPOSER_ALLOW_SUPERUSER=1 php composer.phar install --ignore-platform-reqs --no-audit --no-blocking --no-interaction --quiet || \
-COMPOSER_ALLOW_SUPERUSER=1 php composer.phar install --ignore-platform-reqs --no-audit --no-interaction --quiet || true
+COMPOSER_ALLOW_SUPERUSER=1 php composer.phar install --ignore-platform-reqs --no-blocking --no-intera
+ction --quiet || COMPOSER_ALLOW_SUPERUSER=1 php composer.phar install --ignore-platform-reqs --no-interaction --quiet || tru
 
 # Remove o instalador temporário
 rm -f composer.phar
