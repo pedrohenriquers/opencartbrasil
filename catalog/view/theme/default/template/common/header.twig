@@ -20,6 +20,13 @@
 {% for robot in robots %}
 <meta name="{{ robot.name }}" content="{{ robot.content }}" />
 {% endfor %}
+<link rel="manifest" href="manifest.php" />
+<meta name="theme-color" content="#229ac8" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="{{ name }}" />
+<link rel="apple-touch-icon" href="image/pwa/icon-192.png" />
 <link rel="stylesheet" type="text/css" href="catalog/view/theme/default/stylesheet/open-sans.css" />
 <link rel="stylesheet" type="text/css" href="catalog/view/javascript/font-awesome/css/font-awesome.min.css" />
 <link rel="stylesheet" type="text/css" href="catalog/view/javascript/bootstrap/css/bootstrap.min.css" media="screen" />
