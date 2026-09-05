@@ -106,6 +106,28 @@ if (\$ocbr_store_url) {\\
     \$ocbr_base = 'http://' . \$_SERVER['HTTP_HOST'] . '/';\\
 } else {\\
     \$ocbr_base = getenv('HTTP_SERVER') ?: 'http://' . gethostname() . '/';\\
+}\\
+\\
+// Atras de um proxy que termina o TLS (Cloudflare Tunnel, nginx, Traefik), a\\
+// requisicao chega ao PHP como HTTP puro: sem isto o OpenCart e as extensoes\\
+// que consultam \$_SERVER['HTTPS'] tratariam a conexao como insegura. So e\\
+// aplicado quando STORE_URL declara https, ou seja, quando o proxy e parte\\
+// deliberada da instalacao; do contrario o cabecalho, que vem do cliente,\\
+// poderia ser forjado.\\
+if (\$ocbr_store_url && strpos(\$ocbr_base, 'https://') === 0) {\\
+    if (isset(\$_SERVER['HTTP_X_FORWARDED_PROTO']) && \$_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {\\
+        \$_SERVER['HTTPS'] = 'on';\\
+        \$_SERVER['SERVER_PORT'] = 443;\\
+    }\\
+\\
+    // IP real do cliente: sem isto todo pedido seria registrado com o\\
+    // endereco do proxy, inutilizando historico e antifraude.\\
+    if (!empty(\$_SERVER['HTTP_CF_CONNECTING_IP'])) {\\
+        \$_SERVER['REMOTE_ADDR'] = \$_SERVER['HTTP_CF_CONNECTING_IP'];\\
+    } elseif (!empty(\$_SERVER['HTTP_X_FORWARDED_FOR'])) {\\
+        \$partes = explode(',', \$_SERVER['HTTP_X_FORWARDED_FOR']);\\
+        \$_SERVER['REMOTE_ADDR'] = trim(\$partes[0]);\\
+    }\\
 }" "$file"
 
   local server_expr="\$ocbr_base"
