@@ -84,7 +84,20 @@ self.addEventListener('fetch', function (evento) {
     // Navegacao: sempre rede. Sem conexao, a pagina offline.
     if (requisicao.mode === 'navigate') {
         evento.respondWith(
-            fetch(requisicao).catch(function () {
+            fetch(requisicao).then(function (resposta) {
+                // Atras de um proxy (Cloudflare Tunnel, nginx), a origem fora do
+                // ar nao derruba a requisicao: o proxy responde 502 ou 504 com a
+                // propria pagina de erro, e o fetch tem sucesso. Sem tratar isso,
+                // o usuario veria a pagina do proxy no lugar da pagina da loja.
+                //
+                // 503 fica de fora de proposito: e o codigo do modo manutencao do
+                // OpenCart, que tem pagina propria e precisa ser exibida.
+                if (resposta.status === 502 || resposta.status === 504) {
+                    return caches.match(PAGINA_OFFLINE);
+                }
+
+                return resposta;
+            }).catch(function () {
                 return caches.match(PAGINA_OFFLINE);
             })
         );
