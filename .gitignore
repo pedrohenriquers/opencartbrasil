@@ -11,3 +11,6 @@ config.php
 
 # Gerado pelo entrypoint a partir de .htaccess.txt, varia por maquina
 .htaccess
+
+# Configuracao por maquina; use .env.example como modelo
+.env
