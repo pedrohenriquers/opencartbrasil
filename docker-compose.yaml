@@ -32,6 +32,7 @@ services:
             - ocbr_network
         volumes:
             - ./:/var/www/html
+            - ../opencart-storage:/var/www/storage
         depends_on:
             - ocbr_db
 

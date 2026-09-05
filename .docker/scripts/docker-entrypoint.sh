@@ -86,6 +86,7 @@ if (\$ocbr_store_url) {\\
     -e "s#^define('HTTPS_SERVER', '.*');#define('HTTPS_SERVER', ${server_expr});#" \
     -e "s#^define('HTTP_CATALOG', '.*');#define('HTTP_CATALOG', \$ocbr_base);#" \
     -e "s#^define('HTTPS_CATALOG', '.*');#define('HTTPS_CATALOG', \$ocbr_base);#" \
+    -e "s#^define('DIR_STORAGE', DIR_SYSTEM . 'storage/');#define('DIR_STORAGE', '/var/www/storage/');#" \
     "$file"
 
   echo "URL dinamica aplicada em ${file}"
@@ -97,12 +98,12 @@ ocbr_make_config_dynamic /var/www/html/admin/config.php "admin/"
 folders=(
   "/var/www/html/image/cache/"
   "/var/www/html/image/catalog/"
-  "/var/www/html/system/storage/cache/"
-  "/var/www/html/system/storage/logs/"
-  "/var/www/html/system/storage/download/"
-  "/var/www/html/system/storage/upload/"
-  "/var/www/html/system/storage/session/"
-  "/var/www/html/system/storage/modification/"
+  "/var/www/storage/cache/"
+  "/var/www/storage/logs/"
+  "/var/www/storage/download/"
+  "/var/www/storage/upload/"
+  "/var/www/storage/session/"
+  "/var/www/storage/modification/"
 )
 
 for folder in ${folders[@]}; do
