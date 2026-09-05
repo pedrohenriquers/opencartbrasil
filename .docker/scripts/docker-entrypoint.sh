@@ -92,6 +92,14 @@ if (\$ocbr_store_url) {\\
   echo "URL dinamica aplicada em ${file}"
 }
 
+# As regras de rewrite vivem em .htaccess.txt no repositorio. O arquivo real
+# precisa ser criado aqui, e nao na imagem: o bind mount do repositorio cobre
+# o webroot e descartaria qualquer arquivo criado durante o build.
+if [ ! -f /var/www/html/.htaccess ] && [ -f /var/www/html/.htaccess.txt ]; then
+  cp /var/www/html/.htaccess.txt /var/www/html/.htaccess
+  echo ".htaccess criado a partir de .htaccess.txt"
+fi
+
 ocbr_make_config_dynamic /var/www/html/config.php ""
 ocbr_make_config_dynamic /var/www/html/admin/config.php "admin/"
 

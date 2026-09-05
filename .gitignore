@@ -8,3 +8,6 @@ config.php
 /system/storage
 /system/storage/vendor
 !index.html
+
+# Gerado pelo entrypoint a partir de .htaccess.txt, varia por maquina
+.htaccess

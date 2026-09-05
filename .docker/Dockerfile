@@ -67,14 +67,16 @@ RUN set -aux; \
         echo "    ServerAdmin webmaster@localhost"; \
         echo "    DocumentRoot /var/www/html"; \
         echo ""; \
+        echo "    <Directory /var/www/html>"; \
+        echo "        Options -Indexes +FollowSymLinks"; \
+        echo "        AllowOverride All"; \
+        echo "        Require all granted"; \
+        echo "    </Directory>"; \
+        echo ""; \
         echo "    ErrorLog /dev/stderr"; \
         echo "    CustomLog /dev/stdout combined"; \
         echo "</VirtualHost>"; \
     } > /etc/apache2/sites-available/000-default.conf; \
-    \
-    if [ ! -f .htaccess ]; then \
-        mv .htaccess.txt .htaccess; \
-    fi; \
     \
     a2enmod rewrite;
 
