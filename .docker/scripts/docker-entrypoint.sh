@@ -39,9 +39,9 @@ if [ $is_valid = 1 ]; then
 
       php install/cli_install.php install ${cli_arguments[@]};
 
-      if [ -z $PASSWORD ]; then
+      if [ -z "$PASSWORD" ]; then
           echo -e "\nCredenciais de acesso"
-          echo "Usuário: ${USERNAME:-'admin'}"
+          echo "Usuário: ${USERNAME:-admin}"
           echo "Senha: ${PASSWORD:-$password_default}"
           echo -e "Após logar, troque os dados para sua segurança\n\n\n"
       fi

@@ -22,7 +22,9 @@ services:
             - DB_PASSWORD=${DB_PASSWORD:-store}
             - DB_DATABASE=${DB_DATABASE:-opencartbrasil}
             - USERNAME=${ADMIN_USERNAME:-admin}
-            - PASSWORD=${ADMIN_PASSWORD:-admin}
+            # Forma "-" e nao ":-": um ADMIN_PASSWORD vazio precisa chegar
+            # ate o entrypoint, que nesse caso sorteia a senha inicial.
+            - PASSWORD=${ADMIN_PASSWORD-admin}
             - HTTP_SERVER=${HTTP_SERVER:-http://localhost:${HTTP_PORT:-8080}/}
             # Endereco canonico da loja. Vazio, a URL sai do cabecalho Host,
             # que o cliente controla: bom para desenvolvimento, inseguro em
