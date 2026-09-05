@@ -133,6 +133,15 @@ fi
 ocbr_make_config_dynamic /var/www/html/config.php ""
 ocbr_make_config_dynamic /var/www/html/admin/config.php "admin/"
 
+# Com a loja ja instalada, o instalador web vira porta de entrada para
+# reinstalacao por terceiros. Removido automaticamente para a loja nascer
+# segura em qualquer maquina. Para reinstalar do zero: apague os config.php
+# e restaure a pasta com "git checkout -- install".
+if [ -s /var/www/html/config.php ] && [ -d /var/www/html/install ]; then
+  rm -rf /var/www/html/install
+  echo "Pasta install removida (loja ja instalada)"
+fi
+
 folders=(
   "/var/www/html/image/cache/"
   "/var/www/html/image/catalog/"
