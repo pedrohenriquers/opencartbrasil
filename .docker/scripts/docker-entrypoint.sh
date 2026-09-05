@@ -48,6 +48,52 @@ if [ $is_valid = 1 ]; then
   fi
 fi
 
+# O instalador grava a URL da loja fixa no config.php. Como config.php e
+# admin/config.php sao ignorados pelo git, esse valor nao acompanha o
+# repositorio: cada maquina precisa do seu. Em vez de fixar um host, os
+# arquivos passam a derivar a URL do host da requisicao, o que evita erro de
+# CORS ao acessar por IP, hostname ou dominio sem tocar em nenhum arquivo.
+ocbr_make_config_dynamic() {
+  local file="$1" admin_suffix="$2"
+
+  [ -f "$file" ] || return 0
+  grep -q 'ocbr_base' "$file" && return 0   # ja convertido
+
+  sed -i "1a\\
+\\
+// STORE_URL fixa o endereco canonico da loja e tem precedencia sobre tudo.\\
+// Em producao ela deve estar definida: sem isso a URL sai do cabecalho Host,\\
+// que o cliente controla, e um Host forjado faria a loja gerar links para o\\
+// dominio do atacante (explorado em e-mails de recuperacao de senha).\\
+// Sem STORE_URL o comportamento e o de desenvolvimento: a loja responde por\\
+// qualquer nome (IP, hostname) sem reconfiguracao. Em CLI nao existe\\
+// HTTP_HOST: cai para HTTP_SERVER e, por ultimo, o hostname da maquina.\\
+\$ocbr_store_url = getenv('STORE_URL');\\
+\\
+if (\$ocbr_store_url) {\\
+    \$ocbr_base = rtrim(\$ocbr_store_url, '/') . '/';\\
+} elseif (isset(\$_SERVER['HTTP_HOST'])) {\\
+    \$ocbr_base = 'http://' . \$_SERVER['HTTP_HOST'] . '/';\\
+} else {\\
+    \$ocbr_base = getenv('HTTP_SERVER') ?: 'http://' . gethostname() . '/';\\
+}" "$file"
+
+  local server_expr="\$ocbr_base"
+  [ -n "$admin_suffix" ] && server_expr="\$ocbr_base . '${admin_suffix}'"
+
+  sed -i \
+    -e "s#^define('HTTP_SERVER', '.*');#define('HTTP_SERVER', ${server_expr});#" \
+    -e "s#^define('HTTPS_SERVER', '.*');#define('HTTPS_SERVER', ${server_expr});#" \
+    -e "s#^define('HTTP_CATALOG', '.*');#define('HTTP_CATALOG', \$ocbr_base);#" \
+    -e "s#^define('HTTPS_CATALOG', '.*');#define('HTTPS_CATALOG', \$ocbr_base);#" \
+    "$file"
+
+  echo "URL dinamica aplicada em ${file}"
+}
+
+ocbr_make_config_dynamic /var/www/html/config.php ""
+ocbr_make_config_dynamic /var/www/html/admin/config.php "admin/"
+
 folders=(
   "/var/www/html/image/cache/"
   "/var/www/html/image/catalog/"

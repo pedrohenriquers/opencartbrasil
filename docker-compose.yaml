@@ -24,6 +24,10 @@ services:
             - USERNAME=admin
             - PASSWORD=admin
             - HTTP_SERVER=http://localhost:8080/
+            # Endereco canonico da loja. Vazio, a URL sai do cabecalho Host,
+            # que o cliente controla: bom para desenvolvimento, inseguro em
+            # dominio publico. Preencha ao publicar a loja.
+            - STORE_URL=
         networks:
             - ocbr_network
         volumes:
