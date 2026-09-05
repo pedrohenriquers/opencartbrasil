@@ -307,6 +307,94 @@ services:
       - app-network
 ```
 
+## Template Docker do repositório
+
+Além das imagens publicadas, este repositório traz um template Docker próprio, formado pelo `docker-compose.yaml`, pelo `.env.example` e pelo entrypoint em `.docker/scripts/docker-entrypoint.sh`. O entrypoint prepara a loja sozinho no primeiro boot: não é preciso passar pelo instalador do navegador nem editar arquivos de configuração à mão.
+
+### Subindo a loja:
+
+```bash
+git clone https://github.com/pedrohenriquers/opencartbrasil.git
+cd opencartbrasil
+cp .env.example .env
+docker compose up -d
+```
+
+O primeiro boot é mais demorado, porque aguarda o banco de dados subir e executa a instalação da loja. Acompanhe pelos registros:
+
+```bash
+docker compose logs -f ocbr
+```
+
+Quando terminar, a loja estará disponível nos endereços abaixo:
+
+| Endereço | Descrição |
+| -------- | --------- |
+| `http://localhost:8080/` | Loja |
+| `http://localhost:8080/admin/` | Painel de controle administrativo |
+
+O usuário e a senha padrão do painel são **admin** e **admin**, definidos no `.env`. **Atenção:** Troque-os antes de publicar a loja.
+
+### Variáveis do arquivo .env:
+
+Todas as variáveis são opcionais e possuem valor padrão, ou seja, sem o arquivo `.env` a loja sobe em modo de desenvolvimento. Cada uma está descrita em detalhes no `.env.example`, que serve de modelo.
+
+| Variável | Padrão | Descrição |
+| -------- | ------ | --------- |
+| `STORE_URL` | *(vazio)* | Endereço canônico da loja, com barra no final |
+| `HTTP_PORT` | 8080 | Porta HTTP no host |
+| `ADMIN_USERNAME` | admin | Usuário do painel administrativo, criado na instalação |
+| `ADMIN_PASSWORD` | admin | Senha do painel administrativo, criada na instalação |
+| `DB_USERNAME` | store | Usuário do banco de dados |
+| `DB_PASSWORD` | store | Senha do banco de dados |
+| `DB_DATABASE` | opencartbrasil | Nome do banco de dados |
+
+As variáveis do banco de dados são aplicadas tanto na loja quanto no container do MySQL, e só têm efeito na primeira subida, quando o volume do banco é criado.
+
+### ⚠ Aviso sobre a variável STORE_URL:
+
+Com a `STORE_URL` vazia, a URL da loja é derivada do cabeçalho `Host` da requisição, o que faz a loja responder por IP, hostname ou qualquer nome sem reconfiguração. É conveniente para desenvolver, mas **inseguro em domínio público**: o cabeçalho é controlado pelo cliente e um `Host` forjado faz a loja gerar links apontando para o domínio do atacante (*host header injection*), problema explorado, por exemplo, em e-mails de recuperação de senha.
+
+Preencha a `STORE_URL` ao publicar a loja. Definida, ela fixa o endereço canônico e tem precedência sobre o cabeçalho `Host`.
+
+### O que o entrypoint faz automaticamente:
+
+No primeiro boot, quando ainda não existe um `config.php` preenchido, o entrypoint:
+
+1. Aguarda o banco de dados aceitar conexões.
+2. Instala a loja através do `install/cli_install.php`, com as credenciais vindas do `.env`.
+3. Habilita as URLs amigáveis (SEO). Isso acontece **apenas na instalação inicial**, para respeitar quem desligar a opção pelo painel.
+
+Em todo boot, o entrypoint ainda:
+
+1. Cria o `.htaccess` a partir do `.htaccess.txt`, caso ele não exista. O arquivo é gerado aqui, e não na imagem, porque o bind mount do repositório cobre o webroot e descartaria qualquer arquivo criado durante o build.
+2. Ajusta o `config.php` e o `admin/config.php` para derivarem a URL a partir do host da requisição, respeitando a `STORE_URL` quando definida.
+3. **Remove a pasta `install/`** assim que a loja está instalada, para que o instalador web não vire porta de entrada para uma reinstalação por terceiros.
+4. Cria as pastas de cache, imagens, sessões, logs e uploads, com as permissões corretas.
+5. Tenta executar o `composer install`, caso ainda não exista o `composer.lock`.
+
+**Nota sobre o Composer:** a instalação das dependências falha hoje, porque pacotes exigidos pelo `composer.json` estão bloqueados por *security advisories* do próprio Composer. A loja funciona assim mesmo: o `system/startup.php` só carrega o autoload quando o arquivo existe. O que não funciona são as extensões que dependem dessas bibliotecas, como alguns meios de pagamento.
+
+### Pasta de storage fora do webroot:
+
+A pasta de storage fica **fora do webroot**, em `../opencart-storage`, irmã do diretório do repositório, e é montada pelo compose em `/var/www/storage` dentro do container. O entrypoint aponta a constante `DIR_STORAGE` dos arquivos de configuração para esse caminho, de modo que sessões, logs, downloads, uploads e modificações não fiquem acessíveis pelo navegador.
+
+### ⚠ Reinstalando a loja do zero:
+
+Como o entrypoint **remove a pasta `install/`** após a instalação inicial, apagar os `config.php` **não é suficiente** para reinstalar: sem o instalador a loja apenas responde com HTTP 302 e nada é instalado. Restaure a pasta **antes** de apagar os arquivos de configuração:
+
+```bash
+git checkout -- install
+rm config.php admin/config.php
+docker compose restart ocbr
+```
+
+Para reinstalar também o banco de dados, remova o volume antes de subir novamente:
+
+```bash
+docker compose down -v
+```
+
 ## Instalação
 
 ### ⚠ Preparativos:
