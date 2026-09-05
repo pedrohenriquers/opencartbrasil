@@ -795,3 +795,14 @@ html[dir=rtl] #cart .dropdown-menu {
     float: right;
 	}
 }
+
+/* Rodape em duas colunas.
+   O .row do Bootstrap 3 usa float, e com colunas de alturas diferentes a
+   terceira encaixa na sobra da primeira em vez de comecar uma linha nova.
+   O flex-wrap resolve sem depender de clearfix a cada par, o que seria
+   fragil aqui: a coluna de informacoes so e renderizada quando ha paginas
+   cadastradas, e a contagem mudaria. */
+footer .row {
+  display: flex;
+  flex-wrap: wrap;
+}

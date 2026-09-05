@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row">
       {% if informations %}
-      <div class="col-sm-3">
+      <div class="col-xs-6 col-sm-6">
         <h5>{{ text_information }}</h5>
         <ul class="list-unstyled">
          {% for information in informations %}
@@ -11,7 +11,7 @@
         </ul>
       </div>
       {% endif %}
-      <div class="col-sm-3">
+      <div class="col-xs-6 col-sm-6">
         <h5>{{ text_service }}</h5>
         <ul class="list-unstyled">
           <li><a href="{{ contact }}">{{ text_contact }}</a></li>
@@ -19,7 +19,7 @@
           <li><a href="{{ sitemap }}">{{ text_sitemap }}</a></li>
         </ul>
       </div>
-      <div class="col-sm-3">
+      <div class="col-xs-6 col-sm-6">
         <h5>{{ text_extra }}</h5>
         <ul class="list-unstyled">
           <li><a href="{{ manufacturer }}">{{ text_manufacturer }}</a></li>
@@ -28,7 +28,7 @@
           <li><a href="{{ special }}">{{ text_special }}</a></li>
         </ul>
       </div>
-      <div class="col-sm-3">
+      <div class="col-xs-6 col-sm-6">
         <h5>{{ text_account }}</h5>
         <ul class="list-unstyled">
           <li><a href="{{ account }}">{{ text_account }}</a></li>
