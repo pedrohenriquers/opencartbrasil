@@ -45,6 +45,36 @@ if [ $is_valid = 1 ]; then
           echo "Senha: ${PASSWORD:-$password_default}"
           echo -e "Após logar, troque os dados para sua segurança\n\n\n"
       fi
+
+      # Liga as URLs amigaveis so na instalacao inicial. Em boots seguintes a
+      # opcao nao e tocada, para respeitar quem a desligar pelo painel.
+      php <<'PHP'
+<?php
+require '/var/www/html/config.php';
+
+try {
+    $pdo = new PDO(
+        'mysql:host=' . DB_HOSTNAME . ';port=' . DB_PORT . ';dbname=' . DB_DATABASE,
+        DB_USERNAME,
+        DB_PASSWORD
+    );
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $table = DB_PREFIX . 'setting';
+    $update = $pdo->prepare("UPDATE `{$table}` SET `value` = '1' WHERE store_id = 0 AND `key` = 'config_seo_url'");
+    $update->execute();
+
+    $exists = $pdo->query("SELECT COUNT(*) FROM `{$table}` WHERE store_id = 0 AND `key` = 'config_seo_url'")->fetchColumn();
+
+    if (!$exists) {
+        $pdo->exec("INSERT INTO `{$table}` (store_id, `code`, `key`, `value`, serialized) VALUES (0, 'config', 'config_seo_url', '1', 0)");
+    }
+
+    echo "URLs amigaveis (SEO) habilitadas\n";
+} catch (Exception $e) {
+    echo 'Nao foi possivel habilitar as URLs amigaveis: ' . $e->getMessage() . "\n";
+}
+PHP
   fi
 fi
 
