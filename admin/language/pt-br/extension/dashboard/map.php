@@ -8,6 +8,10 @@ $_['text_success']     = 'Mapa geográfico de vendas modificado com sucesso!';
 $_['text_edit']        = 'Editando Mapa geográfico de vendas';
 $_['text_order']       = 'Pedidos';
 $_['text_sale']        = 'Vendas';
+$_['text_city']        = 'Cidade';
+$_['text_top_cities']  = 'Cidades em %s';
+$_['text_loading']     = 'Carregando...';
+$_['text_no_results']  = 'Nenhum pedido encontrado.';
 
 // Entry
 $_['entry_status']     = 'Situação';

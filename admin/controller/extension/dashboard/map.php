@@ -96,14 +96,53 @@ class ControllerExtensionDashboardMap extends Controller {
 
 		$this->load->model('extension/dashboard/map');
 
-		$results = $this->model_extension_dashboard_map->getTotalOrdersByCountry();
+		$codes = $this->model_extension_dashboard_map->getStateMapCodes();
+
+		$results = $this->model_extension_dashboard_map->getTotalOrdersByState();
 
 		foreach ($results as $result) {
-			$json[strtolower($result['iso_code_2'])] = array(
+			// Pedidos de fora do Brasil, ou com o estado gravado de forma que
+			// não corresponde a nenhuma região do mapa, ficam de fora.
+			if (!isset($codes[$result['zone']])) {
+				continue;
+			}
+
+			$json[$codes[$result['zone']]] = array(
+				'zone'   => $result['zone'],
 				'total'  => $result['total'],
 				'amount' => $this->currency->format($result['amount'], $this->config->get('config_currency'))
 			);
 		}
+
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
+	}
+
+	public function cities() {
+		$this->load->language('extension/dashboard/map');
+
+		$this->load->model('extension/dashboard/map');
+
+		if (isset($this->request->get['zone'])) {
+			$zone = $this->request->get['zone'];
+		} else {
+			$zone = '';
+		}
+
+		$cities = array();
+
+		foreach ($this->model_extension_dashboard_map->getTotalOrdersByCity($zone) as $result) {
+			$cities[] = array(
+				'city'   => $result['city'],
+				'total'  => $result['total'],
+				'amount' => $this->currency->format($result['amount'], $this->config->get('config_currency'))
+			);
+		}
+
+		$json = array(
+			'zone'   => $zone,
+			'cities' => $cities
+		);
 
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));

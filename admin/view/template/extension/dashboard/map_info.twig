@@ -4,11 +4,26 @@
   </div>
   <div class="panel-body">
     <div id="vmap" style="width: 100%; height: 260px;"></div>
+    <div id="vmap-cities" style="display: none; margin-top: 15px;">
+      <h4 id="vmap-cities-title" style="font-size: 14px; margin: 0 0 10px;"></h4>
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover" style="margin-bottom: 0;">
+          <thead>
+            <tr>
+              <td class="text-left">{{ text_city }}</td>
+              <td class="text-right">{{ text_order }}</td>
+              <td class="text-right">{{ text_sale }}</td>
+            </tr>
+          </thead>
+          <tbody id="vmap-cities-body"></tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>
 <link type="text/css" href="view/javascript/jquery/jqvmap/jqvmap.css" rel="stylesheet" media="screen" />
 <script type="text/javascript" src="view/javascript/jquery/jqvmap/jquery.vmap.js"></script> 
-<script type="text/javascript" src="view/javascript/jquery/jqvmap/maps/jquery.vmap.world.js"></script> 
+<script type="text/javascript" src="view/javascript/jquery/jqvmap/maps/jquery.vmap.brazil.js?v=2"></script> 
 <script type="text/javascript"><!--
 $(document).ready(function() {
 	$.ajax({
@@ -22,7 +37,7 @@ $(document).ready(function() {
 			}
 					
 			$('#vmap').vectorMap({
-				map: 'world_en',
+				map: 'brazil_br',
 				backgroundColor: '#FFFFFF',
 				borderColor: '#FFFFFF',
 				color: '#9FD5F1',
@@ -36,6 +51,38 @@ $(document).ready(function() {
 					if (json[code]) {
 						label.html('<strong>' + label.text() + '</strong><br />' + '{{ text_order }} ' + json[code]['total'] + '<br />' + '{{ text_sale }} ' + json[code]['amount']);
 					}
+				},
+				onRegionClick: function(event, code, region) {
+					var title = '{{ text_top_cities }}'.replace('%s', region);
+
+					$('#vmap-cities-title').text(title);
+					$('#vmap-cities-body').html('<tr><td colspan="3" class="text-center">{{ text_loading }}</td></tr>');
+					$('#vmap-cities').show();
+
+					$.ajax({
+						url: 'index.php?route=extension/dashboard/map/cities&user_token={{ user_token }}&zone=' + encodeURIComponent(region),
+						dataType: 'json',
+						success: function(json) {
+							var html = '';
+
+							if (json['cities'].length) {
+								for (var i = 0; i < json['cities'].length; i++) {
+									html += '<tr>';
+									html += '  <td class="text-left">' + json['cities'][i]['city'] + '</td>';
+									html += '  <td class="text-right">' + json['cities'][i]['total'] + '</td>';
+									html += '  <td class="text-right">' + json['cities'][i]['amount'] + '</td>';
+									html += '</tr>';
+								}
+							} else {
+								html = '<tr><td colspan="3" class="text-center">{{ text_no_results }}</td></tr>';
+							}
+
+							$('#vmap-cities-body').html(html);
+						},
+						error: function(xhr, ajaxOptions, thrownError) {
+							$('#vmap-cities-body').html('<tr><td colspan="3" class="text-center">' + thrownError + '</td></tr>');
+						}
+					});
 				}
 			});			
 		},

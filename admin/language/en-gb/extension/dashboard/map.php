@@ -8,6 +8,10 @@ $_['text_success']     = 'Success: You have modified dashboard map!';
 $_['text_edit']        = 'Edit Dashboard Map';
 $_['text_order']       = 'Orders';
 $_['text_sale']        = 'Sales';
+$_['text_city']        = 'City';
+$_['text_top_cities']  = 'Cities in %s';
+$_['text_loading']     = 'Loading...';
+$_['text_no_results']  = 'No orders found.';
 
 // Entry
 $_['entry_status']     = 'Status';
